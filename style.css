@@ -672,10 +672,49 @@ canvas {
 @media (max-width: 480px) {
     .content {
         padding: 20px;
+        display: flex;
+        flex-direction: column;
     }
 
     h1 {
         font-size: 2em;
+        order: 1;
+    }
+
+    .subtitle {
+        order: 2;
+    }
+
+    #intro-section {
+        order: 3;
+    }
+
+    .name-input-container {
+        order: 4;
+    }
+
+    .color-selector-container {
+        order: 5;
+    }
+
+    .buttons {
+        order: 6;
+    }
+
+    #canvas-container {
+        order: 7;
+    }
+
+    .adspace-inline {
+        order: 8;
+    }
+
+    .adspace-sidebar {
+        order: 9;
+    }
+
+    .info {
+        order: 10;
     }
 
     .btn {
