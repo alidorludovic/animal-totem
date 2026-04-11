@@ -32,15 +32,17 @@ const ANIMALS = [
 ];
 
 const COLORS = [
-    { bg: '#667eea', text: '#ffffff' },
-    { bg: '#764ba2', text: '#ffffff' },
-    { bg: '#f093fb', text: '#ffffff' },
-    { bg: '#4facfe', text: '#ffffff' },
-    { bg: '#43e97b', text: '#ffffff' },
-    { bg: '#fa709a', text: '#ffffff' },
+    // Pinterest-style pastel colors only
+    { bg: '#F5E6D3', text: '#4a4a4a' },  // Warm beige
+    { bg: '#FFF8E7', text: '#4a4a4a' },  // Cream
+    { bg: '#FFE4D6', text: '#4a4a4a' },  // Peach
+    { bg: '#F0E6FF', text: '#4a4a4a' },  // Lavender
+    { bg: '#E8F5E9', text: '#4a4a4a' },  // Mint
+    { bg: '#FFF0F5', text: '#4a4a4a' },  // Soft pink
 ];
 
 let currentTotem = null;
+let selectedColorIndex = null;
 
 // Sélectionner un élément aléatoire d'un tableau
 function getRandomElement(array) {
@@ -50,9 +52,11 @@ function getRandomElement(array) {
 // Générer un totem
 function generateTotem() {
     const nameInput = document.getElementById('nameInput').value.trim();
-    const name = nameInput || 'Hey you !';
+    const name = nameInput || 'You ';
     const animal = getRandomElement(ANIMALS);
-    const color = getRandomElement(COLORS);
+    
+    // Use selected color or random
+    const color = selectedColorIndex !== null ? COLORS[selectedColorIndex] : getRandomElement(COLORS);
     const number = Math.floor(Math.random() * 1000) + 1;
 
     currentTotem = {
@@ -107,7 +111,7 @@ function drawTotem(totem) {
 
     // Custom text with name
     ctx.font = 'bold 70px Arial';
-    const nameText = `${totem.name}, your animal totem is:`;
+    const nameText = `${totem.name}, your animal totem `;
     
     // Draw name text with shadow
     ctx.fillStyle = totem.color.text;
@@ -124,7 +128,7 @@ function drawTotem(totem) {
     ctx.font = 'bold 300px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(totem.animal.emoji, canvas.width / 2, canvas.height / 2 - 100);
+    ctx.fillText(totem.animal.emoji, canvas.width / 2, canvas.height / 2 - 20);
 
     // Title
     ctx.font = 'bold 80px Arial';
@@ -254,6 +258,28 @@ document.getElementById('generateBtn').addEventListener('click', () => {
 });
 
 document.getElementById('downloadBtn').addEventListener('click', downloadTotem);
+
+// Color selector buttons
+document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        // Remove selected class from all buttons
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+        
+        // Add selected class to clicked button
+        btn.classList.add('selected');
+        
+        // Set selected color
+        const colorIndex = btn.getAttribute('data-color');
+        if (colorIndex === null || btn.classList.contains('random-color')) {
+            selectedColorIndex = null;
+        } else {
+            selectedColorIndex = parseInt(colorIndex);
+        }
+    });
+});
+
+// Auto-select random button on load
+document.getElementById('randomColorBtn').classList.add('selected');
 
 // Allow generation by pressing Enter in input
 document.getElementById('nameInput').addEventListener('keypress', (e) => {
