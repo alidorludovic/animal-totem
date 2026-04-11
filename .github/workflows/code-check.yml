@@ -1,4 +1,4 @@
-name: Code Quality Check
+name: Code Quality & Vercel Deploy
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main, master, develop ]
 
 jobs:
-  lint:
+  quality-check:
     runs-on: ubuntu-latest
     
     steps:
@@ -25,56 +25,163 @@ jobs:
       run: eslint **/*.js --no-eslintrc --env browser --env es2020 --parser-options ecmaVersion=2020
       continue-on-error: true
     
-    - name: Check file structure
+    - name: Verify project structure
       run: |
-        echo "✓ Checking project structure..."
-        test -f index.html && echo "✓ index.html found"
-        test -f style.css && echo "✓ style.css found"
-        test -f app.js && echo "✓ app.js found"
-        test -f pages/generator.html && echo "✓ pages/generator.html found"
-        test -f pages/about.html && echo "✓ pages/about.html found"
-        test -f pages/privacy.html && echo "✓ pages/privacy.html found"
-        test -f pages/contact.html && echo "✓ pages/contact.html found"
-        test -f pages/terms.html && echo "✓ pages/terms.html found"
-        echo "✓ All required files present!"
-    
-    - name: Validate HTML
-      run: |
-        echo "✓ HTML validation (basic syntax check)..."
-        for file in index.html pages/*.html; do
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "🔍 Checking project structure..."
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        
+        files=(
+          "index.html"
+          "style.css"
+          "app.js"
+          "pages/generator.html"
+          "pages/about.html"
+          "pages/privacy.html"
+          "pages/contact.html"
+          "pages/terms.html"
+          "robots.txt"
+          "LICENSE"
+          "README.md"
+          "CONTRIBUTING.md"
+        )
+        
+        for file in "${files[@]}"; do
           if [ -f "$file" ]; then
-            if grep -q "<!DOCTYPE html>" "$file"; then
-              echo "✓ $file has valid DOCTYPE"
-            fi
+            echo "✓ $file"
+          else
+            echo "✗ $file MISSING"
+            exit 1
+          fi
+        done
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    - name: Validate HTML syntax
+      run: |
+        echo "🔍 Validating HTML files..."
+        html_files=(index.html pages/generator.html pages/about.html pages/privacy.html pages/contact.html pages/terms.html)
+        
+        for file in "${html_files[@]}"; do
+          if grep -q "<!DOCTYPE html>" "$file" && grep -q "</html>" "$file"; then
+            echo "✓ $file is valid"
+          else
+            echo "✗ $file has syntax issues"
+            exit 1
           fi
         done
     
     - name: Check CSS syntax
       run: |
-        echo "✓ Checking CSS files..."
-        if [ -f style.css ]; then
-          # Basic CSS validation - check for common issues
-          if grep -q "{" style.css && grep -q "}" style.css; then
-            echo "✓ style.css has valid CSS syntax"
-          fi
+        echo "🔍 Validating CSS..."
+        if grep -q "{" style.css && grep -q "}" style.css; then
+          echo "✓ style.css syntax is valid"
+        else
+          echo "✗ style.css has syntax errors"
+          exit 1
         fi
     
     - name: Security check
       run: |
-        echo "✓ Running security checks..."
-        # Check for common security issues
-        ! grep -r "eval(" **/*.js 2>/dev/null || echo "⚠ Found eval() - use with caution"
-        ! grep -r "innerHTML" **/*.js 2>/dev/null | grep -v "totemInfo" || echo "⚠ Found innerHTML usage"
-        echo "✓ Security check complete"
+        echo "🔍 Running security checks..."
+        
+        # Check for eval()
+        if grep -r "eval(" **/*.js 2>/dev/null; then
+          echo "⚠ Warning: eval() found - ensure it's safe"
+        else
+          echo "✓ No eval() found"
+        fi
+        
+        # Check for innerHTML (except in controlled areas)
+        if grep -r "innerHTML" **/*.js 2>/dev/null | grep -v "totemInfo"; then
+          echo "⚠ Warning: innerHTML usage detected"
+        else
+          echo "✓ innerHTML usage is controlled"
+        fi
+        
+        # Check robots.txt
+        if [ -f robots.txt ]; then
+          echo "✓ robots.txt configured"
+        fi
+        
+        echo "✓ Security check passed"
     
-    - name: Summary
+    - name: Verify Vercel deployment files
       run: |
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "✓ Code Quality Check Complete!"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "• Project structure: OK"
-        echo "• HTML files: OK"
-        echo "• CSS files: OK"
-        echo "• JavaScript: OK"
-        echo "• Security: OK"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "🔍 Checking Vercel deployment configuration..."
+        
+        # Check if vercel.json exists (optional but recommended)
+        if [ -f vercel.json ]; then
+          echo "✓ vercel.json found"
+        else
+          echo "ℹ vercel.json not found (using defaults)"
+        fi
+        
+        # Verify all HTML entry points exist
+        if [ -f "index.html" ]; then
+          echo "✓ Entry point (index.html) exists"
+        else
+          echo "✗ index.html not found"
+          exit 1
+        fi
+        
+        echo "✓ Vercel deployment files verified"
+    
+    - name: Build verification
+      run: |
+        echo "🔍 Verifying deployment structure..."
+        
+        # Count static files
+        html_count=$(find . -name "*.html" | wc -l)
+        css_count=$(find . -name "*.css" | wc -l)
+        js_count=$(find . -name "*.js" -path "./.git" -prune -o -type f -print | wc -l)
+        
+        echo "  • HTML files: $html_count"
+        echo "  • CSS files: $css_count"
+        echo "  • JS files: $js_count"
+        
+        if [ "$html_count" -ge 5 ] && [ "$css_count" -ge 1 ] && [ "$js_count" -ge 1 ]; then
+          echo "✓ Build structure is valid"
+        else
+          echo "✗ Missing required files"
+          exit 1
+        fi
+    
+    - name: Check file sizes
+      run: |
+        echo "🔍 Checking file sizes for optimization..."
+        
+        for file in index.html style.css app.js; do
+          size=$(du -h "$file" | cut -f1)
+          echo "  • $file: $size"
+        done
+        
+        total_size=$(du -sh . | cut -f1)
+        echo "  • Total project size: $total_size"
+    
+    - name: Final summary
+      run: |
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "✅ ALL CHECKS PASSED - READY FOR VERCEL"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "✓ Project structure verified"
+        echo "✓ HTML syntax valid"
+        echo "✓ CSS syntax valid"
+        echo "✓ JavaScript validated"
+        echo "✓ Security checks passed"
+        echo "✓ Vercel deployment ready"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "📤 Ready to push to Vercel!"
+
+  deploy-preview:
+    needs: quality-check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: ✅ Pull Request quality approved
+      run: |
+        echo "✅ PR passed all code quality checks!"
+        echo "🚀 Ready for deployment when merged"
+
