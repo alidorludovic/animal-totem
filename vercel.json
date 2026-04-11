@@ -2,7 +2,6 @@
   "name": "Animal Totem",
   "version": 2,
   "buildCommand": "",
-  "framework": "static",
   "installCommand": "",
   "outputDirectory": "./",
   "public": true,
