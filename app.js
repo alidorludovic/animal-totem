@@ -25,10 +25,11 @@ const ANIMALS = [
     { name: 'Frog', emoji: '🐸', traits: 'Transformation, growth, emotion' },
     { name: 'Shark', emoji: '🦈', traits: 'Instinct, adaptability, survival' },
     { name: 'Gecko', emoji: '🦎', traits: 'Intuition, adaptability, agility' },
-    { name: 'Peacock', emoji: '🦚', traits: 'Focus, speed, keen vision' },
-    { name: 'Rhino', emoji: '🦏', traits: 'Clarity, ascension, celestial vision' },
+    { name: 'Peacock', emoji: '🦚', traits: 'Beauty, confidence, self-expression' },
+    { name: 'Rhino', emoji: '🦏', traits: 'Steady power, protection, grounded' },
     { name: 'Zebra', emoji: '🦓', traits: 'Uniqueness, collective protection, distinction' },
     { name: 'Giraffe', emoji: '🦒', traits: 'Perspective, grace, elevated vision' },
+    { name: 'Bee', emoji: '🐝', traits: 'Harmony, hard work, community' },
 ];
 
 const COLORS = [
@@ -52,7 +53,7 @@ function getRandomElement(array) {
 // Générer un totem
 function generateTotem() {
     const nameInput = document.getElementById('nameInput').value.trim();
-    const name = nameInput || 'You ';
+    const name = nameInput || 'You';
     const animal = getRandomElement(ANIMALS);
     
     // Use selected color or random
