@@ -138,17 +138,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 
 ---
 
-## 🚀 Next Steps
-
-1. **Try it locally** : `python3 -m http.server 8000`
-2. **Deploy** : Push to Vercel (1 click!)
-3. **Share** : Post on TikTok / Instagram / Discord
-4. **Monetize** : Add your Google AdSense code
-5. **Iterate** : Gather feedback, improve continuously
-
----
-
-## 📄 License
+##  License
 
 MIT - Use however you want!
 
