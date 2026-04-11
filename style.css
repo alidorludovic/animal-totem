@@ -687,6 +687,7 @@ canvas {
 
     #intro-section {
         order: 3;
+        display: none;
     }
 
     .name-input-container {
