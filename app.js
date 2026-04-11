@@ -50,7 +50,7 @@ function getRandomElement(array) {
 // Générer un totem
 function generateTotem() {
     const nameInput = document.getElementById('nameInput').value.trim();
-    const name = nameInput || 'Toi';
+    const name = nameInput || 'Hey you !';
     const animal = getRandomElement(ANIMALS);
     const color = getRandomElement(COLORS);
     const number = Math.floor(Math.random() * 1000) + 1;
