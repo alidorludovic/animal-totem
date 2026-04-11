@@ -1,7 +1,7 @@
 {
   "name": "Animal Totem",
   "version": 2,
-  "buildCommand": "",
+  "buildCommand": "sh build.sh",
   "installCommand": "",
   "outputDirectory": "./",
   "public": true,
