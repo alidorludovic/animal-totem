@@ -1,0 +1,35 @@
+# Animal Totem - robots.txt
+# Prevent scraping and malicious bots
+
+# Allow legitimate search engines
+User-agent: Googlebot
+User-agent: Bingbot
+Disallow:
+
+# Block all other bots by default
+User-agent: *
+Crawl-delay: 1
+Disallow: /admin/
+Disallow: /private/
+Disallow: /.git/
+Disallow: /*.json$
+Disallow: /node_modules/
+
+# Block known scraper and click-fraud bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+# Sitemap
+Sitemap: https://your-domain.com/sitemap.xml
