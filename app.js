@@ -279,9 +279,6 @@ document.querySelectorAll('.color-btn').forEach(btn => {
     });
 });
 
-// Auto-select random button on load
-document.getElementById('randomColorBtn').classList.add('selected');
-
 // Allow generation by pressing Enter in input
 document.getElementById('nameInput').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
