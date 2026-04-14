@@ -236,6 +236,20 @@ body {
     font-size: 0.95em;
 }
 
+.feature-card a {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.feature-card a:visited {
+    color: #4f46e5;
+}
+
+.feature-card a:hover {
+    color: #3730a3;
+}
+
 /* AdSense Space */
 .adspace {
     max-width: 1000px;
@@ -751,6 +765,28 @@ canvas {
 
 .footer p {
     margin: 0;
+}
+
+.footer-links {
+    margin-top: 10px;
+    font-size: 0.95em;
+    font-weight: 500;
+    line-height: 1.8;
+}
+
+.footer-links a {
+    color: #f2f4ff;
+    text-decoration: none;
+    margin: 0 6px;
+}
+
+.footer-links a:visited {
+    color: #f2f4ff;
+}
+
+.footer-links a:hover {
+    color: #ffffff;
+    text-decoration: underline;
 }
 
 .footer-credit {
