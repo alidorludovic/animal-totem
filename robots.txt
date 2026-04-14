@@ -32,4 +32,4 @@ User-agent: Bytespider
 Disallow: /
 
 # Sitemap
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://animal-totem.vercel.app/sitemap.xml
